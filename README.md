@@ -23,3 +23,7 @@ This project is a simple example of integrating Flask, RabbitMQ, and large langu
    ```
 4. **View the result**<br />
    The rabbitMQ consumer will receive the message and process it using the Gemini model. the result will be printed in the terminal.
+5. **Monitoring Queue**<br />
+   ```
+   http://localhost:15673
+   ```
