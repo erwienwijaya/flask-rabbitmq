@@ -9,7 +9,7 @@ This project is a simple example of integrating Flask, RabbitMQ, and large langu
 1. **Clone Repositori:**<br />
    Clone or download directly.<br/>
    ```
-   git clone (https://github.com/erwienwijaya/flask-rabbitmq.git)
+   git clone https://github.com/erwienwijaya/flask-rabbitmq.git
    cd flask_gemini_rabbitmq
    ```
 2. **Run the application using Docker Compose**<br/>
