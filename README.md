@@ -14,6 +14,7 @@ This project is a simple example of integrating Flask, RabbitMQ, and large langu
    ```
 2. **Run the application using Docker Compose**<br/>
    ```
+   echo "GEMINI_API_KEY=your_key_api_here" >> .env
    docker-compose up --build
    ```
 3. **Send a request**<br />
