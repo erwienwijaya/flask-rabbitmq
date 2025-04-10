@@ -25,7 +25,7 @@ This project is a simple example of integrating Flask, RabbitMQ, and Large Langu
    echo "GEMINI_API_KEY=your_key_api_here" >> .env
    docker-compose up --build
    
-   # if you've already new version of docker use below it
+   # If you already have the new version of Docker, use the code below
    docker compose up --build
    ```
 3. **Send a request**<br />
@@ -36,6 +36,7 @@ This project is a simple example of integrating Flask, RabbitMQ, and Large Langu
 4. **Activate the consumer (Don't need to run when using Docker compose)**<br />
    The rabbitMQ consumer will receive the message and process it using the Gemini model.<br />
    ```
+   # run on locally only (development mode)
    python consumer.py
    ```
 5. **View the result**<br />
@@ -44,9 +45,25 @@ This project is a simple example of integrating Flask, RabbitMQ, and Large Langu
    curl -X GET http://127.0.0.1:5000/result\?message_id\=<change_with_message_id> -H "Content-Type: application/json"
    ```
 6. **Monitoring Queue**<br />
+   Open your browser and then run the url below 
    ```
    http://localhost:15673
    
    # user = guest
    # password = guest
+   ```
+7. **Monitoring Redis**<br />
+   Open your terminal and then run the code below
+   ```
+   # open redis cli
+   docker exec -it <container_id or container_name> redis-cli
+   
+   # open redis cli using docker compose
+   docker-compose exec <name_of_service> redis-cli
+   
+   # If you already have the new version of Docker, use the code below
+   docker compose exec <name_of_service> redis-cli 
+   
+   # flush all data on redis (delete all unnecessary data)
+   docker exec -it <container_id or container_name> redis-cli flushall
    ```
