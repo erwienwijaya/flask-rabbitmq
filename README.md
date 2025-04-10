@@ -55,9 +55,13 @@ This project is a simple example of integrating Flask, RabbitMQ, and Large Langu
 7. **Monitoring Redis**<br />
    Open your terminal and then run the code below
    ```
+   # pick option alternative
+   
+   # option: 1
    # open redis cli
    docker exec -it <container_id or container_name> redis-cli
    
+   # option: 2
    # open redis cli using docker compose
    docker-compose exec <name_of_service> redis-cli
    
