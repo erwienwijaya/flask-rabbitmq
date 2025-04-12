@@ -1,10 +1,10 @@
 import os
-import pika
 import time
 import json
 import google.generativeai as genai
 from dotenv import load_dotenv
-from redis_serve import store_redis
+from connections import broker, client
+
 
 load_dotenv()
 
@@ -46,7 +46,7 @@ def callback(ch, method, properties, body):
     print(f"Received message: {data_dict.get('text')}")
     result = process_with_gemini(data_dict.get('text'))
 
-    store_redis(
+    client.store_redis(
         data_dict.get('id'),
         result,
     )
@@ -55,30 +55,22 @@ def callback(ch, method, properties, body):
 
 
 def start_consuming():
-    # activate this line if you've separately rabbitMQ on your local
-    # connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost',
-    #                                                                port=5673,
-    #                                                                virtual_host='/',
-    #                                                                credentials=pika.PlainCredentials('guest', 'guest')))
+    channel_consume = broker.create_channel()
+    channel_consume.queue_declare(queue='gemini_queue')
+    channel_consume.basic_consume(queue='gemini_queue',
+                                       on_message_callback=callback, auto_ack=True)
 
-    # active this line if you're using docker
-    connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
-    channel = connection.channel()
-    channel.queue_declare(queue='gemini_queue')
-    channel.basic_consume(queue='gemini_queue',
-                          on_message_callback=callback, auto_ack=True)
     print('Waiting for messages. To exit press CTRL+C')
 
-    # try:
-    channel.start_consuming()
+    try:
+        channel_consume.start_consuming()
 
-    #     while True:
-    #         pass  # keeping connection Alive
-    #
-    # except KeyboardInterrupt:
-    #     print('Stopping consumer...')
-    #     connection.close()
+        while True:
+            pass  # keeping connection Alive
 
+    except KeyboardInterrupt:
+        print('Stopping consumer...')
+        broker.connection.close()
 
 
 if __name__ == '__main__':

@@ -9,11 +9,18 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+      start_period: 40s
 
   redis:
     image: "redis:latest"
     ports:
       - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   flask-app:
     build: .
@@ -21,10 +28,14 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      - rabbitmq
-      - redis
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       - PYTHONUNBUFFERED=1
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
 
   consumer:
     build: .
@@ -32,4 +43,9 @@ services:
     command: python consumer.py
     depends_on:
       rabbitmq:
-          condition: service_healthy
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis

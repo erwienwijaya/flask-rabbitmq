@@ -71,3 +71,11 @@ This project is a simple example of integrating Flask, RabbitMQ, and Large Langu
    # flush all data on redis (delete all unnecessary data)
    docker exec -it <container_id or container_name> redis-cli flushall
    ```
+8. If you've had issues with running it, you can try these ways.:
+   ```
+   # stop all docker-compose services
+   docker compose stop
+   
+   # try to run again
+   docker compose start
+   ```
